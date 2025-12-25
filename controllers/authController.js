@@ -20,15 +20,15 @@ exports.register = async (req, res) => {
     });
     res.status(200).json({ message: "User Registered Successfully!!!" });
   } catch (err) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 };
 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = User.findOne({ email });
-    if (user && user.compare(password, user.password)) {
+    const user = await User.findOne({ email });
+    if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
         expiresIn: process.env.JWT_EXPIRY,
       });
@@ -42,6 +42,6 @@ exports.login = async (req, res) => {
       res.status(401).json({ message: "Invalid Email or Password!!!" });
     }
   } catch (err) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: err.message });
   }
 };
