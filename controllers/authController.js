@@ -32,6 +32,7 @@ exports.login = async (req, res) => {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
         expiresIn: process.env.JWT_EXPIRY,
       });
+      res.cookie("token", token, { maxAge: 30 * 24 * 60 * 60 * 1000 });
       res.json({
         _id: user._id,
         name: user.name,
@@ -44,4 +45,12 @@ exports.login = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+exports.logout = async (req, res) => {
+  if(!req.cookies.token){
+    return res.status(401).json({ message: "You are not logged in..." });
+  } 
+  res.cookie("token", "", { maxAge: 1 });
+  res.json({ message: "Logged out successfully!!!" });
 };
