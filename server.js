@@ -10,6 +10,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const proofRoutes = require("./routes/proofRoutes");
+const clientRoutes = require("./routes/clientRoutes");
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/projects", projectRoutes);
 app.use("/api/v1/proofs", proofRoutes);
+app.use("/api/v1/client", clientRoutes)
 
 // test route
 app.get("/", (req, res) => {
