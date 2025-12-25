@@ -1,5 +1,7 @@
-const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config();
+
+const express = require("express");
 const cors = require("cors");
 const colors = require("colors");
 const cookieParser = require("cookie-parser");
@@ -8,8 +10,6 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const proofRoutes = require("./routes/proofRoutes");
-
-dotenv.config();
 
 const app = express();
 

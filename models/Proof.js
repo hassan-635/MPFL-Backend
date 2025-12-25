@@ -15,15 +15,12 @@ const proofSchema = new mongoose.Schema(
     clientFeedback: {
       name: {
         type: String,
-        required: [true, "Client name required"],
       },
       email: {
         type: String,
-        required: [true, "Client Email required"],
       },
       comment: {
         type: String,
-        required: [true, "Please Provide Feedback..."],
       },
       decision: {
         type: String,
