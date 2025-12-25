@@ -45,13 +45,13 @@ exports.getProjectById = async (req, res) => {
 exports.updateProjectStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const project = project.findOneAndUpdate(
+    const project = await Project.findOneAndUpdate(
       {
         _id: req.params.id,
         freelancer: req.user._id,
       },
       { status },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!project) {
