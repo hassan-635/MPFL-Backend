@@ -1,24 +1,32 @@
-import mongoose from 'mongoose';
+const mongoose = require("mongoose");
 
-const projectSchema = new mongoose.Schema({
+const projectSchema = new mongoose.Schema(
+  {
     freelancer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,    },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     title: {
-        type: String,
-        required: true,},
+      type: String,
+      required: true,
+    },
     description: {
-        type: String,},
-    shareableToken : {
-        type: String,
-        unique: true,},
-    status : {
-        type: String,
-        enum: ['Active', 'Completed'],
-        default: 'Active',},
-}, {
+      type: String,
+    },
+    shareableToken: {
+      type: String,
+      unique: true,
+    },
+    status: {
+      type: String,
+      enum: ["Active", "Completed"],
+      default: "Active",
+    },
+  },
+  {
     timestamps: true,
-});
+  }
+);
 
-export default mongoose.model('Project', projectSchema);
+module.exports = mongoose.model("Project", projectSchema);
