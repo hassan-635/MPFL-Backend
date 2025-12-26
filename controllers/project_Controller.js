@@ -62,3 +62,20 @@ exports.updateProjectStatus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getDashboardStats = async (req, res) => {
+  try {
+    const projects = await Project.find({ freelancer: req.user._id });
+    const stats = {
+      totalProjects: projects.length,
+      pendingProjects: projects.filter((p) => p.status === "pending").length,
+      completedProjects: projects.filter((p) => p.status === "completed")
+        .length,
+      awaitingFeedback: projects.filter((p) => p.status === "in-progress")
+        .length,
+    };
+    res.status(200).json(stats);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

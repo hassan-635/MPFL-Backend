@@ -99,6 +99,11 @@ exports.submitBulkFeedback = async (req, res) => {
 
     const project = await Project.findById(projectId).populate("freelancer");
 
+    if (clientFeedback.decision === "Accepted") {
+      await Project.findByIdAndUpdate(projectId, { status: "completed" });
+    } else if (clientFeedback.decision === "Rejected") {
+      await Project.findByIdAndUpdate(projectId, { status: "in-progress" });
+    }
     // Email to Freelancer
     await sendEmail({
       email: project.freelancer.email,

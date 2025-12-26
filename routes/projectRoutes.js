@@ -5,6 +5,7 @@ const {
   getFreelancerProjects,
   getProjectById,
   updateProjectStatus,
+  getDashboardStats,
 } = require("../controllers/project_Controller.js");
 const { protect } = require("../middleware/authMiddleware.js");
 
@@ -17,5 +18,7 @@ router
   .route("/:id")
   .get(protect, getProjectById)
   .put(protect, updateProjectStatus);
+
+router.get("/stats/all", protect, getDashboardStats);
 
 module.exports = router;
