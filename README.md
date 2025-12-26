@@ -1,71 +1,66 @@
 # 🚀 MPFL - Multi-Platform Freelancer Link (Backend)
 
-**MPFL** ek professional proof-delivery aur feedback management system hai jo freelancers aur clients ke darmiyan communication gap ko khatam karta hai. Ye platform freelancers ko ijazat deta hai ke wo apna kaam (Images/GIFs/Videos) professionally deliver karein aur clients se real-time feedback hasil karein.
+**MPFL** is a professional proof-delivery and feedback management system designed to bridge the communication gap between freelancers and clients. It provides a secure environment for freelancers to deliver creative assets (Images/GIFs/Videos) and receive structured, real-time feedback.
 
 ---
 
-## ✨ Key Features (Implemented)
+## ✨ Core Features (Current Phase)
 
 ### 🔐 Authentication & Security
 
-- **JWT Authentication:** Secure login aur signup system via Cookies.
-- **Protected Routes:** Sirf authorized freelancers hi projects create aur manage kar sakte hain.
-- **Secure Password Hashing:** Bcrypt ka istemal passwords ko safe rakhne ke liye.
+- **JWT-Based Auth:** Secure user sessions using JSON Web Tokens and HTTP-only cookies.
+- **Role Protection:** Strict access control ensuring only project owners can manage assets.
+- **Bcrypt Hashing:** Industry-standard encryption for user credentials.
 
-### 📁 Project & Proof Management
+### 📁 Project & Asset Management
 
-- **Smart Uploads:** Cloudinary integration ke zariye images aur GIFs ka automatic storage.
-- **Shareable Tokens:** Client ke liye unique, secure, aur bina-login wala access link.
-- **Dashboard Stats:** Real-time summary (Total, Pending, Completed, Awaiting Feedback).
+- **Cloudinary Integration:** Automated high-speed media uploads and storage.
+- **Shareable Access Tokens:** Secure, non-login public links for clients to review work.
+- **Real-time Dashboard:** Instant statistics for Total, Pending, and Completed projects.
 
-### 💬 Client Interaction & Feedback
+### 💬 Client Interaction System
 
-- **Single File Feedback:** Client har file par alag se comment aur decision (Accept/Reject) de sakta hai.
-- **Bulk Approval:** Aik click mein poora project approve karne ki facility.
-- **Auto-Status Sync:** Bulk approval par project status khud-ba-khud `completed` ho jata hai.
+- **Granular Feedback:** Clients can provide specific comments and decisions (Accept/Reject) on individual files.
+- **Bulk Project Approval:** Streamlined workflow allowing clients to approve entire batches in one click.
+- **Auto-Status Sync:** Projects automatically transition to "Completed" status upon client approval.
 
-### 📧 Automated Notifications (Nodemailer)
+### 📧 Automated Notifications
 
-- **Delivery Alerts:** Jab freelancer kaam upload karta hai, client ko foran email chali jati hai.
-- **Feedback Notifications:** Client ke response par freelancer ko instant email update milta hai.
+- **Delivery Alerts:** Instant email notifications to clients when new proofs are uploaded.
+- **Feedback Loops:** Real-time email alerts to freelancers when a client provides feedback.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Runtime:** Node.js
-- **Framework:** Express.js
-- **Database:** MongoDB (Mongoose)
-- **Cloud Storage:** Cloudinary
-- **Mailing Service:** Nodemailer (Gmail SMTP)
-- **Security:** JWT, Bcrypt, CORS
+- **Backend:** Node.js & Express.js
+- **Database:** MongoDB (Mongoose ODM)
+- **Media Storage:** Cloudinary
+- **Communication:** Nodemailer (SMTP)
+- **Environment:** Dotenv for secure configuration
 
 ---
 
-## 🔮 Future Implementations (Roadmap)
+## 🔮 Future Roadmap (Scaling Goals)
 
-Project requirements ke mutabiq, hum ye features aglay phase mein add karenge:
+We aim to evolve MPFL into a full-scale freelancer management suite. Upcoming features include:
 
-1.  **Video Proofing:** Direct video timestamping (Client video ke specific second par comment kar sakay ga).
-2.  **Version Control:** Purani files ka record aur naye versions ki tracking.
-3.  **Chat Integration:** Freelancer aur Client ke darmiyan real-time chat box.
-4.  **Payment Gateway:** Project approve hote hi Stripe ya PayPal ke zariye payment release.
-5.  **Multi-User Roles:** Teams ke liye sub-accounts aur permissions ka system.
-6.  **Push Notifications:** Browser aur mobile par instant notification alerts.
+1.  **🎥 Interactive Video Proofing:** Frame-by-frame commenting allowing clients to timestamp feedback directly on videos.
+2.  **💳 Escrow Payment Integration:** Integration with Stripe/PayPal to hold and release payments automatically upon project approval.
+3.  **📂 Version Control System:** A historical log of all revisions, allowing users to compare current work with previous versions.
+4.  **💬 Real-time Collaboration:** An in-app chat system to minimize dependency on external messaging platforms.
+5.  **📊 Freelancer Analytics:** Advanced data visualization for monthly revenue, client satisfaction, and delivery efficiency.
+6.  **🤖 AI-Powered Summaries:** Using AI to summarize long client feedback threads into actionable tasks.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Installation & Setup
 
-### 1. Installation
+### 1. Clone the Project
 
 ```bash
-# Clone the repo
-git clone [your-repo-url]
-
-# Install dependencies
-npm install
-
+git clone [your-repo-link]
+cd backend-mpfl
 ```
 
 ### 2. Setup Environment Variables
@@ -81,10 +76,15 @@ EMAIL_PASS=your_gmail_app_password
 CLOUD_NAME=your_cloudinary_name
 API_KEY=your_cloudinary_key
 API_SECRET=your_cloudinary_secret
-
 ```
 
-### 3. Run the Server
+### 3. Install Dependencies
+
+```bash
+npm install
+```
+
+### 4. Run the Server
 
 ```bash
 # Development mode
@@ -92,7 +92,16 @@ npm run dev
 
 # Production mode
 npm start
+```
 
+### 5. Run the Client
+
+```bash
+# Development mode
+npm run dev
+
+# Production mode
+npm start
 ```
 
 ### Developed with ❤️ by Hassan Ali Abrar
