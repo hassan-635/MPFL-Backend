@@ -59,7 +59,7 @@ We aim to evolve MPFL into a full-scale freelancer management suite. Upcoming fe
 ### 1. Clone the Project
 
 ```bash
-git clone [your-repo-link]
+git clone https://github.com/hassan-635/MPFL-Backend.git
 cd backend-mpfl
 ```
 
