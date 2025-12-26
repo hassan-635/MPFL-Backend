@@ -28,11 +28,11 @@ app.use("/api/v1/client", clientRoutes);
 
 // test route
 app.get("/", (req, res) => {
-  res.send("MPFL API running");
+  res.send("MPFL Backend is live and Running!");
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port number : ${PORT}`.bgMagenta.white);
 });
