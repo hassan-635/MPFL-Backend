@@ -1,9 +1,8 @@
 const Proof = require("../models/Proof");
-const ssendEmail = require("../utils/sendEmail");
+const sendEmail = require("../utils/sendEmail");
 const Project = require("../models/Project");
 
 exports.uploadProofs = async (req, res) => {
-
   // files upload
   try {
     const { projectId, clientEmail } = req.body;
@@ -16,32 +15,31 @@ exports.uploadProofs = async (req, res) => {
       return Proof.create({
         project: projectId,
         fileUrl: file.path,
-        fileType: file.mimetype
+        fileType: file.mimetype,
       });
     });
-      // send email
-  const project = Project.findById(projectId);
-  const shareLink = `http://localhost:3001/view/${project.shareableToken}`;
+    // send email
+    const project = await Project.findById(projectId);
+    const shareLink = `http://localhost:3001/view/${project.shareableToken}`;
 
-  await sendEmail({
-    email: clientEmail,
-    subject: "Project Delivery: Files Ready for Review",
-    message: `<h1>Hello Client,</h1>
+    await sendEmail({
+      email: clientEmail,
+      subject: "Project Delivery: Files Ready for Review",
+      message: `<h1>Hello Client,</h1>
                       <p>Freelancer has uploaded new files for project: <b>${project.title}</b></p>
-                      <p>Review here: <a href="${shareLink}">${shareLink}</a></p>`
-  });
+                      <p>Review here: <a href="${shareLink}">${shareLink}</a></p>`,
+    });
 
-  const savedProof = await Promise.all(proofPromises);
-  return res.status(200).json({
-    message: `${savedProof.length} proofs uploaded successfully and Client notified`,
-    proofs: savedProof
-  });
+    const savedProof = await Promise.all(proofPromises);
+    return res.status(200).json({
+      message: `${savedProof.length} proofs uploaded successfully and Client notified`,
+      proofs: savedProof,
+    });
   } catch (error) {
     res.status(500).json({
       error: error.message,
     });
   }
-  res.status()
 };
 
 exports.getProjectProof = async (req, res) => {
@@ -67,5 +65,3 @@ exports.getProjectProof = async (req, res) => {
     });
   }
 };
-
-

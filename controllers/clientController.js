@@ -1,5 +1,6 @@
 const Project = require("../models/Project");
 const Proof = require("../models/Proof");
+const sendEmail = require("../utils/sendEmail");
 
 exports.getProjectByToken = async (req, res) => {
   try {
@@ -37,11 +38,25 @@ exports.submitFeedback = async (req, res) => {
       proofId,
       { $set: updateFields },
       { new: true }
-    );
+    ).populate({
+      path: "project",
+      populate: {
+        path: "freelancer",
+      },
+    });
 
     if (!proof) {
       return res.status(404).json({ message: "Proof not found" });
     }
+
+    await sendEmail({
+      email: proof.project.freelancer.email,
+      subject: `Feedback on ${proof.project.title}`,
+      message: `<h3>Single File Feedback</h3>
+                      <p>Client reviewed a file in <b>${proof.project.title}</b>.</p>
+                      <p>Decision: <b>${clientFeedback.decision}</b></p>
+                      <p>Comment: ${clientFeedback.comment}</p>`,
+    });
 
     res.status(200).json(proof);
   } catch (error) {
@@ -82,11 +97,21 @@ exports.submitBulkFeedback = async (req, res) => {
         .json({ message: "No proofs found for this project" });
     }
 
-    res.status(200).json({
-      message: `${result.modifiedCount} proof(s) updated successfully`,
-      decision: clientFeedback.decision,
-      updatedCount: result.modifiedCount,
+    const project = await Project.findById(projectId).populate("freelancer");
+
+    // Email to Freelancer
+    await sendEmail({
+      email: project.freelancer.email,
+      subject: `Bulk Feedback: ${project.title}`,
+      message: `<h3>Project Update (Bulk)</h3>
+                    <p>Client has given feedback on all files of <b>${project.title}</b>.</p>
+                    <p>Overall Decision: <b>${clientFeedback.decision}</b></p>
+                    <p>General Comment: ${clientFeedback.comment}</p>`,
     });
+
+    res
+      .status(200)
+      .json({ message: "Bulk feedback saved and Freelancer notified" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
