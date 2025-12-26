@@ -20,7 +20,9 @@ exports.uploadProofs = async (req, res) => {
     });
     // send email
     const project = await Project.findById(projectId);
-    const shareLink = `http://localhost:3001/view/${project.shareableToken}`;
+    // Note: If you have a frontend, this should point to the frontend's view page (e.g., port 3000)
+    // For now, we point to the backend API so you can confirm the data is available
+    const shareLink = `http://localhost:3001/api/v1/client/shared/${project.shareableToken}`;
 
     await sendEmail({
       email: clientEmail,

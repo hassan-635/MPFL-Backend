@@ -17,11 +17,26 @@ const sendEmail = async (options) => {
       throw new Error("Invalid email address format");
     }
 
+    if (!process.env.USER_EMAIL || !process.env.EMAIL_PASS) {
+      throw new Error(
+        "Email credentials missing in environment variables (USER_EMAIL or EMAIL_PASS)"
+      );
+    }
+
+    console.log(
+      `Attempting to send email via: ${process.env.USER_EMAIL.trim()}`
+    );
+    console.log(
+      `Password configured: ${process.env.EMAIL_PASS ? "YES" : "NO"} (Length: ${
+        process.env.EMAIL_PASS.replace(/\s/g, "").length
+      })`
+    );
+
     const transporter = nodemailer.createTransport({
-      service: process.env.EMAIL_SERVICE,
+      service: "gmail",
       auth: {
-        user: process.env.USER_EMAIL,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.USER_EMAIL.trim(),
+        pass: process.env.EMAIL_PASS.replace(/\s/g, ""),
       },
     });
 
