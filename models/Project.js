@@ -20,8 +20,8 @@ const projectSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["active", "completed"],
-      default: "active",
+      enum: ["pending", "in-progress", "completed"],
+      default: "pending",
     },
   },
   {

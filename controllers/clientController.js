@@ -102,7 +102,7 @@ exports.submitBulkFeedback = async (req, res) => {
     if (clientFeedback.decision === "Accepted") {
       await Project.findByIdAndUpdate(projectId, { status: "completed" });
     } else if (clientFeedback.decision === "Rejected") {
-      await Project.findByIdAndUpdate(projectId, { status: "in-progress" });
+      await Project.findByIdAndUpdate(projectId, { status: "pending" });
     }
     // Email to Freelancer
     sendEmail({

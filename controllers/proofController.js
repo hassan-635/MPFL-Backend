@@ -39,6 +39,10 @@ exports.uploadProofs = async (req, res) => {
     });
 
     const savedProof = await Promise.all(proofPromises);
+
+    // Update project status to in-progress
+    await Project.findByIdAndUpdate(projectId, { status: "in-progress" });
+
     return res.status(200).json({
       message: `Files uploaded successfully! Client is being notified.`,
       proofs: savedProof,
