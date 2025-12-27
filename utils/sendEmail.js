@@ -36,7 +36,7 @@ const sendEmail = async (options) => {
       service: "gmail",
       host: "smtp.gmail.com",
       port: 465,
-      secure: false,
+      secure: true,
       auth: {
         user: process.env.USER_EMAIL.trim(),
         pass: process.env.EMAIL_PASS.replace(/\s/g, ""),
@@ -47,13 +47,13 @@ const sendEmail = async (options) => {
     });
 
     const mailOptions = {
-      from: `"MPFL System" <${process.env.USER_EMAIL}>`,
+      from: `"MPFL Admin :" <${process.env.USER_EMAIL}>`,
       to: options.email,
       subject: options.subject,
       html: options.message,
-      connectionTimeout: 10000, // 10 seconds
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
+      connectionTimeout: 20000, // 10 seconds
+      greetingTimeout: 20000,
+      socketTimeout: 20000,
     };
 
     const info = await transporter.sendMail(mailOptions);

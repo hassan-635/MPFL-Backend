@@ -22,19 +22,25 @@ exports.uploadProofs = async (req, res) => {
     const project = await Project.findById(projectId);
     // Note: If you have a frontend, this should point to the frontend's view page (e.g., port 3000)
     // For now, we point to the backend API so you can confirm the data is available
-    const shareLink = `http://localhost:3001/api/v1/client/shared/${project.shareableToken}`;
+    const shareLink = `https://mpfl-backend.onrender.com/api/v1/client/shared/${project.shareableToken}`;
 
-    await sendEmail({
+    sendEmail({
       email: clientEmail,
       subject: "Project Delivery: Files Ready for Review",
       message: `<h1>Hello Client,</h1>
-                      <p>Freelancer has uploaded new files for project: <b>${project.title}</b></p>
-                      <p>Review here: <a href="${shareLink}">${shareLink}</a></p>`,
+            <p>Freelancer has uploaded new files for project: <b>${project.title}</b></p>
+            <p>Review here: <a href="${shareLink}">${shareLink}</a></p>`,
+    }).then((result) => {
+      if (result.success) {
+        console.log("Client notified via email in background.");
+      } else {
+        console.log("Background email failed:", result.error);
+      }
     });
 
     const savedProof = await Promise.all(proofPromises);
     return res.status(200).json({
-      message: `${savedProof.length} proofs uploaded successfully and Client notified`,
+      message: `Files uploaded successfully! Client is being notified.`,
       proofs: savedProof,
     });
   } catch (error) {
