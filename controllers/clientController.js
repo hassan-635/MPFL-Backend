@@ -105,7 +105,7 @@ exports.submitBulkFeedback = async (req, res) => {
       await Project.findByIdAndUpdate(projectId, { status: "in-progress" });
     }
     // Email to Freelancer
-    await sendEmail({
+    sendEmail({
       email: project.freelancer.email,
       subject: `Bulk Feedback: ${project.title}`,
       message: `<h3>Project Update (Bulk)</h3>
