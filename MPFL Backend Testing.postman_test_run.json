@@ -1,0 +1,208 @@
+{
+	"id": "9ca4dee4-a69b-4d2e-8a27-ebf3755e129e",
+	"name": "MPFL Backend Testing",
+	"timestamp": "2025-12-27T17:38:55.340Z",
+	"collection_id": "51009623-1056e5b0-e166-48c3-82ac-07433dbaf7a8",
+	"folder_id": 0,
+	"environment_id": "51009623-a79a102d-3731-41cc-93e6-995104e90fa9",
+	"totalPass": 4,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2025-12-27T17:38:49.086Z",
+	"totalFail": 2,
+	"results": [
+		{
+			"id": "8848dc16-d7d1-49fd-882d-3bb88d3e2bca",
+			"name": "Register Freelancer",
+			"url": " https://mpfl-backend.onrender.com/api/v1/auth/register",
+			"time": 597,
+			"responseCode": {
+				"code": 400,
+				"name": "Bad Request"
+			},
+			"tests": {
+				"Status code is 200": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				597
+			],
+			"allTests": [
+				{
+					"Status code is 200": false
+				}
+			]
+		},
+		{
+			"id": "ca167b0b-a540-42a9-83fd-d97ecb69fc5e",
+			"name": "Login Freelancer",
+			"url": " https://mpfl-backend.onrender.com/api/v1/auth/login",
+			"time": 1013,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Login successful": true
+			},
+			"testPassFailCounts": {
+				"Login successful": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				1013
+			],
+			"allTests": [
+				{
+					"Login successful": true
+				}
+			]
+		},
+		{
+			"id": "2b13e5a0-dd77-43ad-803d-7c82efb2b62f",
+			"name": "Create Project",
+			"url": " https://mpfl-backend.onrender.com/api/v1/projects",
+			"time": 810,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Project created": true
+			},
+			"testPassFailCounts": {
+				"Project created": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				810
+			],
+			"allTests": [
+				{
+					"Project created": true
+				}
+			]
+		},
+		{
+			"id": "695322a6-e8e5-44ef-a228-deaa90d4f8e2",
+			"name": "Get Dashboard Stats",
+			"url": " https://mpfl-backend.onrender.com/api/v1/projects/stats/all",
+			"time": 789,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Stats retrieved": true
+			},
+			"testPassFailCounts": {
+				"Stats retrieved": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				789
+			],
+			"allTests": [
+				{
+					"Stats retrieved": true
+				}
+			]
+		},
+		{
+			"id": "5a83b04d-9ec0-4585-b11b-075b5fc22c25",
+			"name": "Get Project by Token (Client)",
+			"url": " https://mpfl-backend.onrender.com/api/v1/client/shared/8b83eb9519d145956cd589d72a47edbd",
+			"time": 782,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Client project view works": true
+			},
+			"testPassFailCounts": {
+				"Client project view works": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				782
+			],
+			"allTests": [
+				{
+					"Client project view works": true
+				}
+			]
+		},
+		{
+			"id": "8c1b4d19-ff4c-472c-b931-83ce3e650a92",
+			"name": "Submit Bulk Feedback",
+			"url": " https://mpfl-backend.onrender.com/api/v1/client/feedback/bulk/695019acaacf67cdca08c91d",
+			"time": 580,
+			"responseCode": {
+				"code": 404,
+				"name": "Not Found"
+			},
+			"tests": {
+				"Feedback submitted": false
+			},
+			"testPassFailCounts": {
+				"Feedback submitted": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				580
+			],
+			"allTests": [
+				{
+					"Feedback submitted": false
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 4571,
+	"collection": {
+		"requests": [
+			{
+				"id": "8848dc16-d7d1-49fd-882d-3bb88d3e2bca",
+				"method": "POST"
+			},
+			{
+				"id": "ca167b0b-a540-42a9-83fd-d97ecb69fc5e",
+				"method": "POST"
+			},
+			{
+				"id": "2b13e5a0-dd77-43ad-803d-7c82efb2b62f",
+				"method": "POST"
+			},
+			{
+				"id": "695322a6-e8e5-44ef-a228-deaa90d4f8e2",
+				"method": "GET"
+			},
+			{
+				"id": "5a83b04d-9ec0-4585-b11b-075b5fc22c25",
+				"method": "GET"
+			},
+			{
+				"id": "8c1b4d19-ff4c-472c-b931-83ce3e650a92",
+				"method": "PUT"
+			}
+		]
+	}
+}
