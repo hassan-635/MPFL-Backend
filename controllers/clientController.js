@@ -64,59 +64,54 @@ exports.submitFeedback = async (req, res) => {
   }
 };
 
+
 exports.submitBulkFeedback = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { clientFeedback } = req.body;
+    const { clientFeedback } = req.body; // Frontend se ye object aayega
 
     if (!clientFeedback || !clientFeedback.decision) {
       return res.status(400).json({
-        message: "Decision (Accept/Reject) is required for bulk feedback",
+        message: "Decision (Accepted/Rejected) is required",
       });
     }
-    const feedbackObject = {
-      name: clientFeedback.name || "",
-      email: clientFeedback.email || "",
-      comment: clientFeedback.comment || "",
-      decision: clientFeedback.decision,
-    };
 
+    // 1. Saare proofs ko update karein
     const result = await Proof.updateMany(
       { project: projectId },
       {
         $set: {
-          clientFeedback: feedbackObject,
+          clientFeedback: {
+            name: clientFeedback.name || "Client",
+            email: clientFeedback.email || "",
+            comment: clientFeedback.comment || "",
+            decision: clientFeedback.decision, // "Accepted" ya "Rejected"
+          },
           reviewedAt: new Date(),
         },
       }
     );
 
     if (result.matchedCount === 0) {
-      return res
-        .status(404)
-        .json({ message: "No proofs found for this project" });
+      return res.status(404).json({ message: "No proofs found" });
     }
 
-    const project = await Project.findById(projectId).populate("freelancer");
-
+    // 2. Project Status Update (Spelling ka dhyan rakhein)
     if (clientFeedback.decision === "Accepted") {
-      await Project.findByIdAndUpdate(projectId, { status: "completed" });
+      await Project.findByIdAndUpdate(projectId, { status: "completed" }); // Permanently Completed
     } else if (clientFeedback.decision === "Rejected") {
-      await Project.findByIdAndUpdate(projectId, { status: "pending" });
+      await Project.findByIdAndUpdate(projectId, { status: "pending" }); // Wapas pending
     }
-    // Email to Freelancer
+
+    // 3. Freelancer ko notify karein
+    const project = await Project.findById(projectId).populate("freelancer");
     sendEmail({
       email: project.freelancer.email,
-      subject: `Bulk Feedback: ${project.title}`,
-      message: `<h3>Project Update (Bulk)</h3>
-                    <p>Client has given feedback on all files of <b>${project.title}</b>.</p>
-                    <p>Overall Decision: <b>${clientFeedback.decision}</b></p>
-                    <p>General Comment: ${clientFeedback.comment}</p>`,
+      subject: `Project Update: ${project.title}`,
+      message: `Project has been ${clientFeedback.decision}. Comment: ${clientFeedback.comment}`,
     });
 
-    res
-      .status(200)
-      .json({ message: "Bulk feedback saved and Freelancer notified" });
+    res.status(200).json({ message: "Feedback saved and status updated" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
