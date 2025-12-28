@@ -97,3 +97,27 @@ exports.getProjectByToken = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.handleFeedback = async (req, res) => {
+  try {
+    const { projectId } = req.params;
+    const { comment, decision, status } = req.body;
+
+    // 1. Project update karein (Status change)
+    const project = await Project.findByIdAndUpdate(
+      projectId, 
+      { status: status }, 
+      { new: true }
+    );
+
+    // 2. Proof update karein (Latest feedback save karein)
+    // Aap Proof model mein last feedback save kar sakte hain
+    await Proof.updateMany({ project: projectId }, { 
+      clientFeedback: { comment, decision, date: new Date() } 
+    });
+
+    res.status(200).json({ message: "Feedback saved", project });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
