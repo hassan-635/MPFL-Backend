@@ -6,6 +6,7 @@ const {
   getProjectById,
   updateProjectStatus,
   getDashboardStats,
+  getProjectByToken
 } = require("../controllers/project_Controller.js");
 const { protect } = require("../middleware/authMiddleware.js");
 
@@ -20,5 +21,7 @@ router
   .put(protect, updateProjectStatus);
 
 router.get("/stats/all", protect, getDashboardStats);
+
+router.get('/shared/:shareableToken', getProjectByToken);
 
 module.exports = router;

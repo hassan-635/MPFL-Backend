@@ -4,7 +4,8 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email: rawEmail, password } = req.body;
+    const email = rawEmail.toLowerCase();
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already Exists" });
@@ -26,7 +27,8 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email: rawEmail, password } = req.body;
+    const email = rawEmail.toLowerCase();
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
@@ -48,9 +50,9 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-  if(!req.cookies.token){
+  if (!req.cookies.token) {
     return res.status(401).json({ message: "You are not logged in..." });
-  } 
+  }
   res.cookie("token", "", { maxAge: 1 });
   res.json({ message: "Logged out successfully!!!" });
 };

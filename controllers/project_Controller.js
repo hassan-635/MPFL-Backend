@@ -79,3 +79,20 @@ exports.getDashboardStats = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getProjectByToken = async (req, res) => {
+  try {
+    const { shareableToken } = req.params;
+
+ 
+    const project = await Project.findOne({ shareableToken: shareableToken });
+
+    if (!project) {
+      return res.status(404).json({ message: "Invalid or expired token" });
+    }
+
+    res.status(200).json(project);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
