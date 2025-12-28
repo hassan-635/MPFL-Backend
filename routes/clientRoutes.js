@@ -9,6 +9,6 @@ const {
 
 router.get("/shared/:token", getProjectByToken);
 router.put("/feedback/:proofId", submitFeedback);
-router.put("/feedback/bulk/:projectId", submitBulkFeedback);
+router.put("/bulk-feedback/:projectId", submitBulkFeedback);
 
 module.exports = router;
