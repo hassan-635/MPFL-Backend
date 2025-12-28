@@ -1,5 +1,6 @@
 const Project = require("../models/Project");
 const crypto = require("crypto");
+const Proof = require("../models/Proof");
 
 exports.createProject = async (req, res) => {
   try {
@@ -83,15 +84,15 @@ exports.getDashboardStats = async (req, res) => {
 exports.getProjectByToken = async (req, res) => {
   try {
     const { shareableToken } = req.params;
-
- 
     const project = await Project.findOne({ shareableToken: shareableToken });
-
     if (!project) {
       return res.status(404).json({ message: "Invalid or expired token" });
     }
-
-    res.status(200).json(project);
+    const proofs = await Proof.find({ project: project._id });
+    res.status(200).json({
+      ...project._doc, 
+      proofs: proofs   
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
