@@ -5,7 +5,7 @@ const proofSchema = new mongoose.Schema(
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
-      requires: true,
+      required: true,
     },
     fileUrl: {
       // cloudinary url

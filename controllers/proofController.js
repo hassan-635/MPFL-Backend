@@ -58,22 +58,14 @@ exports.getProjectProof = async (req, res) => {
   try {
     const { projectId } = req.params;
     if (!projectId) {
-      return res.status(400).json({
-        message: "Project Id is required",
-      });
+      return res.status(400).json({ message: "Project Id is required" });
     }
     const proofs = await Proof.find({ project: projectId });
-    if (!proofs) {
-      return res.status(404).json({
-        message: "Proof not found",
-      });
-    }
-    return res.status(200).json({
-      proofs,
-    });
+    
+    // YAHAN CHANGE HAI: 
+    // Pehle aap { proofs } bhej rahe thay, ab direct proofs bhejain
+    return res.status(200).json(proofs); 
   } catch (error) {
-    return res.status(500).json({
-      error: error.message,
-    });
+    return res.status(500).json({ error: error.message });
   }
 };
