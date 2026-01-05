@@ -8,22 +8,23 @@ const validateEmail = (email) => {
 const sendEmail = async (options) => {
   try {
     if (!options.email || !validateEmail(options.email)) {
-      throw new Error('Invalid or missing recipient email');
+      throw new Error("Invalid or missing recipient email");
     }
 
     const webhook = process.env.N8N_WEBHOOK_URL;
-    if (!webhook) throw new Error('N8N webhook URL not configured');
+    if (!webhook) throw new Error("N8N webhook URL not configured");
 
     const payload = {
-      to: options.email,
-      subject: options.subject,
-      html: options.message,
-      meta: options.meta || {}
+      recipientEmail: options.email,
+      actionType: options.type, // 'submission' or 'feedback'
+      token: options.token || null,
+      userName: options.name || "User",
+      meta: options.meta || {},
     };
 
     const headers = {};
     if (process.env.N8N_WEBHOOK_TOKEN) {
-      headers['x-n8n-webhook-token'] = process.env.N8N_WEBHOOK_TOKEN;
+      headers["x-n8n-webhook-token"] = process.env.N8N_WEBHOOK_TOKEN;
     }
 
     const res = await axios.post(webhook, payload, { headers, timeout: 15000 });
@@ -34,22 +35,12 @@ const sendEmail = async (options) => {
 
     return { success: false, status: res.status, data: res.data };
   } catch (err) {
-    console.error('sendEmail error:', err.message || err);
-    return { success: false, error: err.message || 'Unknown error' };
+    console.error("sendEmail error:", err.message || err);
+    return { success: false, error: err.message || "Unknown error" };
   }
 };
 
 module.exports = sendEmail;
-
-
-
-
-
-
-
-
-
-
 
 // const nodemailer = require("nodemailer");
 

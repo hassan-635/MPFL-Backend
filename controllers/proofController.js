@@ -26,15 +26,15 @@ exports.uploadProofs = async (req, res) => {
 
     sendEmail({
       email: clientEmail,
-      subject: "Project Delivery: Files Ready for Review",
-      message: `<h1>Hello Client,</h1>
-            <p>Freelancer has uploaded new files for project: <b>${project.title}</b></p>
-            <p>Review here: <a href="${shareLink}">${shareLink}</a></p>`,
+      type: "submission", // Yeh n8n ko batayega ke submission hui hai
+      token: project.shareableToken, // Backend generated token
+      name: "Client", // Client ka naam ya generic
+      subject: "Project Delivery: Files Ready for Review", // Optional, AI bhi generate kar sakta hai
     }).then((result) => {
       if (result.success) {
-        console.log("Client notified via email in background.");
+        console.log("n8n: Client notified via AI email.");
       } else {
-        console.log("Background email failed:", result.error);
+        console.log("n8n: Email failed:", result.error);
       }
     });
 
@@ -61,10 +61,10 @@ exports.getProjectProof = async (req, res) => {
       return res.status(400).json({ message: "Project Id is required" });
     }
     const proofs = await Proof.find({ project: projectId });
-    
-    // YAHAN CHANGE HAI: 
+
+    // YAHAN CHANGE HAI:
     // Pehle aap { proofs } bhej rahe thay, ab direct proofs bhejain
-    return res.status(200).json(proofs); 
+    return res.status(200).json(proofs);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

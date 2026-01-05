@@ -50,12 +50,15 @@ exports.submitFeedback = async (req, res) => {
     }
 
     await sendEmail({
-      email: proof.project.freelancer.email,
-      subject: `Feedback on ${proof.project.title}`,
-      message: `<h3>Single File Feedback</h3>
-                      <p>Client reviewed a file in <b>${proof.project.title}</b>.</p>
-                      <p>Decision: <b>${clientFeedback.decision}</b></p>
-                      <p>Comment: ${clientFeedback.comment}</p>`,
+      email: proof.project.freelancer.email, // Freelancer ki email
+      type: "feedback", // Action type batayein
+      name: proof.project.freelancer.name, // Freelancer ka naam
+      subject: `New Feedback on ${proof.project.title}`,
+      meta: {
+        // Extra details n8n ke liye
+        decision: clientFeedback.decision,
+        comment: clientFeedback.comment,
+      },
     });
 
     res.status(200).json(proof);
@@ -63,7 +66,6 @@ exports.submitFeedback = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 exports.submitBulkFeedback = async (req, res) => {
   try {
@@ -104,11 +106,17 @@ exports.submitBulkFeedback = async (req, res) => {
     }
 
     // 3. Freelancer ko notify karein
+    // submitBulkFeedback function ke end mein:
     const project = await Project.findById(projectId).populate("freelancer");
     sendEmail({
       email: project.freelancer.email,
+      type: "feedback",
+      name: project.freelancer.name,
       subject: `Project Update: ${project.title}`,
-      message: `Project has been ${clientFeedback.decision}. Comment: ${clientFeedback.comment}`,
+      meta: {
+        decision: clientFeedback.decision, // "Accepted" ya "Rejected"
+        comment: clientFeedback.comment,
+      },
     });
 
     res.status(200).json({ message: "Feedback saved and status updated" });
