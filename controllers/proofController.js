@@ -3,14 +3,15 @@ const sendEmail = require("../utils/sendEmail");
 const Project = require("../models/Project");
 
 exports.uploadProofs = async (req, res) => {
-  // files upload
   try {
     const { projectId, clientEmail } = req.body;
-    if (!req.files || req.files === 0) {
+    
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({
-        message: "Please upload atleast one file",
+        message: "Please upload at least one file",
       });
     }
+
     const proofPromises = req.files.map((file) => {
       return Proof.create({
         project: projectId,
@@ -18,39 +19,44 @@ exports.uploadProofs = async (req, res) => {
         fileType: file.mimetype,
       });
     });
-    // send email
+
     const project = await Project.findById(projectId);
-    // Note: If you have a frontend, this should point to the frontend's view page (e.g., port 3000)
-    // For now, we point to the backend API so you can confirm the data is available
+    
+    // Yahan wo link banayein jo client ne open karna hai
     const shareLink = `https://mpfl-backend.onrender.com/api/v1/client/shared/${project.shareableToken}`;
 
+    // RESEND LOGIC: Yahan hum HTML message khud bhej rahe hain
     sendEmail({
       email: clientEmail,
-      type: "submission", // Yeh n8n ko batayega ke submission hui hai
-      token: project.shareableToken, // Backend generated token
-      name: "Client", // Client ka naam ya generic
-      subject: "Project Delivery: Files Ready for Review", // Optional, AI bhi generate kar sakta hai
+      subject: "Project Delivery: Your Files are Ready!",
+      message: `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+          <h2>Hello Client,</h2>
+          <p>Your freelancer has uploaded the project files for <b>${project.title}</b>.</p>
+          <p>You can review the work and provide feedback using the secure link below:</p>
+          <a href="${shareLink}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Review Project Now</a>
+          <p><b>Access Token:</b> ${project.shareableToken}</p>
+          <br>
+          <p>Regards,<br>MPFL Team</p>
+        </div>
+      `,
     }).then((result) => {
       if (result.success) {
-        console.log("n8n: Client notified via AI email.");
+        console.log("Resend: Client notified successfully.");
       } else {
-        console.log("n8n: Email failed:", result.error);
+        console.log("Resend: Email failed:", result.error);
       }
     });
 
     const savedProof = await Promise.all(proofPromises);
-
-    // Update project status to in-progress
     await Project.findByIdAndUpdate(projectId, { status: "in-progress" });
 
     return res.status(200).json({
-      message: `Files uploaded successfully! Client is being notified.`,
+      message: `Files uploaded successfully! Client is being notified via Resend.`,
       proofs: savedProof,
     });
   } catch (error) {
-    res.status(500).json({
-      error: error.message,
-    });
+    res.status(500).json({ error: error.message });
   }
 };
 

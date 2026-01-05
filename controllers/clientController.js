@@ -10,8 +10,6 @@ exports.getProjectByToken = async (req, res) => {
       return res.status(404).json({ message: "Invalid link" });
     }
     const proofs = await Proof.find({ project: project._id });
-    console.log("Project ID:", project._id);
-    console.log("Proofs found:", proofs.length);
     res.status(200).json({ project, proofs });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -24,14 +22,10 @@ exports.submitFeedback = async (req, res) => {
     const { clientFeedback } = req.body;
 
     const updateFields = {};
-    if (clientFeedback.name)
-      updateFields["clientFeedback.name"] = clientFeedback.name;
-    if (clientFeedback.email)
-      updateFields["clientFeedback.email"] = clientFeedback.email;
-    if (clientFeedback.comment)
-      updateFields["clientFeedback.comment"] = clientFeedback.comment;
-    if (clientFeedback.decision)
-      updateFields["clientFeedback.decision"] = clientFeedback.decision;
+    if (clientFeedback.name) updateFields["clientFeedback.name"] = clientFeedback.name;
+    if (clientFeedback.email) updateFields["clientFeedback.email"] = clientFeedback.email;
+    if (clientFeedback.comment) updateFields["clientFeedback.comment"] = clientFeedback.comment;
+    if (clientFeedback.decision) updateFields["clientFeedback.decision"] = clientFeedback.decision;
     updateFields["reviewedAt"] = new Date();
 
     const proof = await Proof.findByIdAndUpdate(
@@ -40,25 +34,28 @@ exports.submitFeedback = async (req, res) => {
       { new: true }
     ).populate({
       path: "project",
-      populate: {
-        path: "freelancer",
-      },
+      populate: { path: "freelancer" },
     });
 
     if (!proof) {
       return res.status(404).json({ message: "Proof not found" });
     }
 
+    // RESEND LOGIC: Notification for Freelancer (Single File)
     await sendEmail({
-      email: proof.project.freelancer.email, // Freelancer ki email
-      type: "feedback", // Action type batayein
-      name: proof.project.freelancer.name, // Freelancer ka naam
-      subject: `New Feedback on ${proof.project.title}`,
-      meta: {
-        // Extra details n8n ke liye
-        decision: clientFeedback.decision,
-        comment: clientFeedback.comment,
-      },
+      email: proof.project.freelancer.email,
+      subject: `Feedback Received: ${proof.project.title}`,
+      message: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2>Hello ${proof.project.freelancer.name},</h2>
+          <p>The client has reviewed one of your files in project <b>${proof.project.title}</b>.</p>
+          <div style="border-left: 5px solid #007bff; padding: 10px; background: #f9f9f9;">
+            <p><b>Decision:</b> ${clientFeedback.decision}</p>
+            <p><b>Comment:</b> ${clientFeedback.comment || "No comment provided."}</p>
+          </div>
+          <p>Please check your dashboard for details.</p>
+        </div>
+      `,
     });
 
     res.status(200).json(proof);
@@ -70,15 +67,12 @@ exports.submitFeedback = async (req, res) => {
 exports.submitBulkFeedback = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { clientFeedback } = req.body; // Frontend se ye object aayega
+    const { clientFeedback } = req.body;
 
     if (!clientFeedback || !clientFeedback.decision) {
-      return res.status(400).json({
-        message: "Decision (Accepted/Rejected) is required",
-      });
+      return res.status(400).json({ message: "Decision (Accepted/Rejected) is required" });
     }
 
-    // 1. Saare proofs ko update karein
     const result = await Proof.updateMany(
       { project: projectId },
       {
@@ -87,7 +81,7 @@ exports.submitBulkFeedback = async (req, res) => {
             name: clientFeedback.name || "Client",
             email: clientFeedback.email || "",
             comment: clientFeedback.comment || "",
-            decision: clientFeedback.decision, // "Accepted" ya "Rejected"
+            decision: clientFeedback.decision,
           },
           reviewedAt: new Date(),
         },
@@ -98,25 +92,29 @@ exports.submitBulkFeedback = async (req, res) => {
       return res.status(404).json({ message: "No proofs found" });
     }
 
-    // 2. Project Status Update (Spelling ka dhyan rakhein)
     if (clientFeedback.decision === "Accepted") {
-      await Project.findByIdAndUpdate(projectId, { status: "completed" }); // Permanently Completed
+      await Project.findByIdAndUpdate(projectId, { status: "completed" });
     } else if (clientFeedback.decision === "Rejected") {
-      await Project.findByIdAndUpdate(projectId, { status: "pending" }); // Wapas pending
+      await Project.findByIdAndUpdate(projectId, { status: "pending" });
     }
 
-    // 3. Freelancer ko notify karein
-    // submitBulkFeedback function ke end mein:
+    // RESEND LOGIC: Notification for Freelancer (Bulk/Project Level)
     const project = await Project.findById(projectId).populate("freelancer");
-    sendEmail({
+    
+    await sendEmail({
       email: project.freelancer.email,
-      type: "feedback",
-      name: project.freelancer.name,
-      subject: `Project Update: ${project.title}`,
-      meta: {
-        decision: clientFeedback.decision, // "Accepted" ya "Rejected"
-        comment: clientFeedback.comment,
-      },
+      subject: `Final Decision: ${project.title}`,
+      message: `
+        <div style="font-family: Arial, sans-serif; color: #333;">
+          <h2>Hello ${project.freelancer.name},</h2>
+          <p>The client has made a final decision on your project <b>${project.title}</b>.</p>
+          <p>Overall Status: <b style="color: ${clientFeedback.decision === 'Accepted' ? 'green' : 'red'};">
+            ${clientFeedback.decision}
+          </b></p>
+          <p><b>Client's Closing Comment:</b><br>${clientFeedback.comment || "No additional comments."}</p>
+          <p>Login to your portal to see next steps.</p>
+        </div>
+      `,
     });
 
     res.status(200).json({ message: "Feedback saved and status updated" });
