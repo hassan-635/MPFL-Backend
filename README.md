@@ -1,8 +1,8 @@
 # 🚀 MPFL - Multi-Platform Freelancer Link (Backend)
 
-**MPFL** is a professional proof-delivery and feedback management system designed to bridge the communication gap between freelancers and clients. It provides a secure environment for freelancers to deliver creative assets (Images/GIFs/Videos) and receive structured, real-time feedback.
+**MPFL** is a professional proof-delivery and feedback management system designed to bridge the communication gap between freelancers and clients. It provides a secure environment for freelancers t[...]  
 
----
+---  
 
 ## ✨ Core Features (Current Phase)
 
@@ -29,7 +29,7 @@
 - **Delivery Alerts:** Instant email notifications to clients when new proofs are uploaded.
 - **Feedback Loops:** Real-time email alerts to freelancers when a client provides feedback.
 
----
+---  
 
 ## 🛠️ Tech Stack
 
@@ -39,7 +39,7 @@
 - **Communication:** Nodemailer (SMTP)
 - **Environment:** Dotenv for secure configuration
 
----
+---  
 
 ## 🔮 Future Roadmap (Scaling Goals)
 
@@ -52,7 +52,7 @@ We aim to evolve MPFL into a full-scale freelancer management suite. Upcoming fe
 5.  **📊 Freelancer Analytics:** Advanced data visualization for monthly revenue, client satisfaction, and delivery efficiency.
 6.  **🤖 AI-Powered Summaries:** Using AI to summarize long client feedback threads into actionable tasks.
 
----
+---  
 
 ## 🚀 Installation & Setup
 
@@ -103,5 +103,14 @@ npm run dev
 # Production mode
 npm start
 ```
+
+---  
+
+## Contributors
+
+- Hassan Ali Abrar — https://github.com/hassan-635
+- Malik Hassan Ullah — https://github.com/Malik-Hassan-Ullah (Collaborator)
+
+---  
 
 ### Developed with ❤️ by Hassan Ali Abrar
