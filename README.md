@@ -109,8 +109,8 @@ npm start
 ## Contributors
 
 - Hassan Ali Abrar — https://github.com/hassan-635
-- Malik Hassan Ullah — https://github.com/Malik-Hassan-Ullah (Collaborator)
+- Malik Hassam Ullah — https://github.com/Malik-Hassam-Ullah (Collaborator)
 
 ---  
 
-### Developed with ❤️ by Hassan Ali Abrar
+### Developed with ❤️ by Hassan Ali Abrar And Hassam Ullah
